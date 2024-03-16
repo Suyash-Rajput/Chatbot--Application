@@ -1,38 +1,50 @@
 .App {
   text-align: center;
+  background-color: #f8f9fa; /* Light background color */
+  padding: 20px; /* Add some padding */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.form {
+  max-width: 400px; /* Limit the width of the form */
+  margin: 0 auto; /* Center the form horizontally */
+  background-color: #fff; /* White background color */
+  border-radius: 8px; /* Add rounded corners */
+  padding: 20px; /* Add some padding */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.form label {
+  display: block; /* Display labels as blocks */
+  margin-bottom: 8px; /* Add some space below labels */
+  font-weight: bold; /* Make labels bold */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.questionInput,
+.fileInput {
+  width: 100%; /* Make input fields full width */
+  padding: 10px; /* Add some padding */
+  margin-bottom: 16px; /* Add some space below input fields */
+  border: 1px solid #ced4da; /* Add a border */
+  border-radius: 4px; /* Add rounded corners */
 }
 
-.App-link {
-  color: #61dafb;
+.submitBtn {
+  width: 100%; /* Make button full width */
+  padding: 10px; /* Add some padding */
+  background-color: #007bff; /* Blue button color */
+  color: #fff; /* White text color */
+  border: none; /* Remove border */
+  border-radius: 4px; /* Add rounded corners */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s; /* Smooth transition for background color */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.submitBtn:hover {
+  background-color: #0056b3; /* Darker blue color on hover */
+}
+
+.resultOutput {
+  margin-top: 20px; /* Add some space above result output */
+  font-weight: bold; /* Make result output bold */
+  color: #333; /* Dark text color */
 }

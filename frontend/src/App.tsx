@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import "./App.css";
+import "./App.css";
 
 export default function App() {
   const [result, setResult] = useState();
@@ -40,7 +40,7 @@ export default function App() {
   };
 
   return (
-    <div className="appBlock">
+    <div className="App">
       <form onSubmit={handleSubmit} className="form">
         <label className="questionLabel" htmlFor="question">
           Question:
