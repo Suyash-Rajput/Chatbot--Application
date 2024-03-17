@@ -76,12 +76,8 @@ def get_text(fileType, file):
 @app.post("/predict")
 async def predict(request: Request, file: UploadFile = File(...), question: str = Form(...), fileType: str = Form(...)):
     print("fileType --------", fileType)
-    # save_file_to_database(file.filename, file, fileType)
     pages = get_text(fileType, file)
-    # raw_text = get_pdf_text(file)
     print("raw_text --------", pages)
-    resp = result_class.get_result(pages, question)
-    # Access the question
+    resp = result_class.get_result(page, question)
     print("Question:", question)
-    # Return appropriate response
     return {"result": resp['output_text']}
