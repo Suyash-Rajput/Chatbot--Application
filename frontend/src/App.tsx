@@ -4,6 +4,7 @@ import "./App.css";
 export default function App() {
   const [result, setResult] = useState("");
   const [question, setQuestion] = useState("");
+  const [file_type, setType] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -15,13 +16,16 @@ export default function App() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      const allowedTypes = ["text/plain", "application/msword", "application/pdf", "text/csv"];
+      console.log(" -----------", selectedFile.type)
+      const allowedTypes = ["text/plain", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/pdf", "text/csv"];
       if (allowedTypes.includes(selectedFile.type)) {
         setFile(selectedFile);
         setErrorMessage("");
         setPopupVisible(true);
+        setType(selectedFile.type);
       } else {
-        setErrorMessage("Unsupported file type. Please upload a .txt, .docx, .pdf, or .csv file.");
+        setFile(null)
+        window.alert("Unsupported file type. Please upload a .txt, .docx, .pdf, or .csv file.");
       }
     }
   };
@@ -34,14 +38,14 @@ export default function App() {
 
     const formData = new FormData();
 
-    if (!file || !question) {
+    if (!file || !question || file == null) {
       window.alert("Please provide both file and question.");
       return;
     }
 
     formData.append("file", file);
     formData.append("question", question);
-
+    formData.append("fileType", file_type);
     fetch("http://127.0.0.1:8000/predict", {
       method: "POST",
       body: formData,
