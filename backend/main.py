@@ -5,11 +5,10 @@ from pydantic import BaseModel
 from typing import Any,Union
 from fastapi import FastAPI, Request, Query, UploadFile, File, Form
 import result as result_class
-import os
-from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_community.document_loaders import TextLoader
-from langchain_community.document_loaders import Docx2txtLoader
+import os, csv
+from docx import Document
+
+from PyPDF2 import PdfReader
 # Load environment variables from .env file (if any)
 load_dotenv()
 
@@ -31,38 +30,56 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+def read_txt_file(text_file):
+    return text_file.file.read()
+
+def read_csv_file(file_path):
+    data = []
+    with open(file_path, newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            data.append(row)
+    return data
+
+def get_pdf_text(pdf_file):
+    text = ""
+    pdf_reader = PdfReader(pdf_file.file)
+    for page in pdf_reader.pages:
+        text += page.extract_text()
+    return text
+
+def get_docs_text(docs_file):
+    text = ""
+    with docs_file.file as f:
+        doc_content = f.read()
+        from io import BytesIO
+        doc_bytes_io = BytesIO(doc_content)
+        doc = Document(doc_bytes_io)
+        for paragraph in doc.paragraphs:
+            text += paragraph.text
+    return text
+
+
 def get_text(fileType, file): 
     pages = ""
     if fileType == "text/csv":
-        path ="E:/llm-assignment-master/backend/temp.csv"
-        with open(path, "wb") as buffer:
-            buffer.write(file.file.read())
-        csv_loader = CSVLoader("E:/llm-assignment-master/backend/temp.csv") 
-        pages = csv_loader.load_and_split()   
+        pages = read_txt_file(file)   
     elif fileType == "application/pdf":
-        path = "E:/llm-assignment-master/backend/temp.pdf"
-        with open(path, "wb") as buffer:
-            buffer.write(file.file.read())
-        pdf_loader = PyPDFLoader("E:/llm-assignment-master/backend/temp.pdf")  
-        pages = pdf_loader.load_and_split()
+        pages = get_pdf_text(file)
     elif fileType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        path =  "E:/llm-assignment-master/backend/temp.docs"
-        with open(path, "wb") as buffer:
-            buffer.write(file.file.read())
-        docs_loader = Docx2txtLoader("E:/llm-assignment-master/backend/temp.docs")
-        pages = docs_loader.load_and_split()
+        pages = get_docs_text(file)
     elif fileType == "text/plain":
-        path = "E:/llm-assignment-master/backend/temp.txt"
-        with open(path, "wb") as buffer:
-            buffer.write(file.file.read())
-        text_loader = TextLoader(path)  
-        pages = text_loader.load_and_split()
+        pages = read_txt_file(file)
     return pages
 
 @app.post("/predict")
 async def predict(request: Request, file: UploadFile = File(...), question: str = Form(...), fileType: str = Form(...)):
     print("fileType --------", fileType)
+    # save_file_to_database(file.filename, file, fileType)
     pages = get_text(fileType, file)
+    # raw_text = get_pdf_text(file)
+    print("raw_text --------", pages)
     resp = result_class.get_result(pages, question)
     # Access the question
     print("Question:", question)

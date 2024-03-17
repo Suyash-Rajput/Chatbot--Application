@@ -21,14 +21,22 @@ prompt_template = """Answer the question as precise as possible using the provid
                     Question: \n {question} \n
                     Answer:
                   """
+                  
+def get_text_chunks(text):
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=10000, chunk_overlap=1000)
+    print("text ------", type(text))
+    chunks = splitter.split_text(str(text))
+    return chunks  # list of strings
 
 def  get_result(pages, query):
-    text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            )
-    page_content = "\n".join(str(p.page_content) for p in pages)
-    chunks = text_splitter.split_text(page_content)
+#     text_splitter = RecursiveCharacterTextSplitter(
+#             chunk_size=1000,
+#             chunk_overlap=200,
+#             )
+    chunks = get_text_chunks(pages)
+#     page_content = "\n".join(str(p.page_content) for p in pages)
+#     chunks = text_splitter.split_text(page_content)
     print("chunks ----------", chunks)
     embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001", google_api_key =  API_KEY)   
     VectorStore = Chroma.from_texts(chunks, embeddings).as_retriever()
