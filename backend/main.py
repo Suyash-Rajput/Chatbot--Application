@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Any,Union
-from typing import Union
+from fastapi import FastAPI, Request, Query, UploadFile, File, Form
+import result as result_class
 
 # Load environment variables from .env file (if any)
 load_dotenv()
@@ -26,10 +27,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# @app.post("/predict", response_model = Response)
+# def predict() -> Any:
+  
+#   #implement this code block
+  
+#   return {"result": "hello world!"}
 
-@app.post("/predict", response_model = Response)
-def predict() -> Any:
-  
-  #implement this code block
-  
-  return {"result": "hello world!"}
+@app.post("/predict")
+async def predict(request: Request, file: UploadFile = File(...), question: str = Form(...)):
+    file_contents = await file.read()
+    print("File Contents:", file_contents) 
+    resp =  result_class.get_result(file_contents.decode('utf-8'), question)
+    # Access the question
+    print("Question:", question)
+    # Return appropriate response
+    return {"result": resp['output_text']}

@@ -2,29 +2,45 @@ import { useState } from "react";
 import "./App.css";
 
 export default function App() {
-  const [result, setResult] = useState();
-  const [question, setQuestion] = useState();
-  const [file, setFile] = useState();
+  const [result, setResult] = useState("");
+  const [question, setQuestion] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleQuestionChange = (event: any) => {
+  const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuestion(event.target.value);
   };
 
-  const handleFileChange = (event: any) => {
-    setFile(event.target.files[0]);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      const allowedTypes = ["text/plain", "application/msword", "application/pdf", "text/csv"];
+      if (allowedTypes.includes(selectedFile.type)) {
+        setFile(selectedFile);
+        setErrorMessage("");
+        setPopupVisible(true);
+      } else {
+        setErrorMessage("Unsupported file type. Please upload a .txt, .docx, .pdf, or .csv file.");
+      }
+    }
   };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Clear the result when submitting the form
+    setResult("");
 
     const formData = new FormData();
 
-    if (file) {
-      formData.append("file", file);
+    if (!file || !question) {
+      window.alert("Please provide both file and question.");
+      return;
     }
-    if (question) {
-      formData.append("question", question);
-    }
+
+    formData.append("file", file);
+    formData.append("question", question);
 
     fetch("http://127.0.0.1:8000/predict", {
       method: "POST",
@@ -32,15 +48,23 @@ export default function App() {
     })
       .then((response) => response.json())
       .then((data) => {
+        // Update the result when response is received
         setResult(data.result);
       })
       .catch((error) => {
         console.error("Error", error);
+        setErrorMessage("An error occurred while processing your request. Please try again later.");
       });
   };
 
   return (
     <div className="App">
+      {popupVisible && (
+        <div className="popup">
+          <p>File uploaded successfully!</p>
+          <button onClick={() => setPopupVisible(false)}>Close</button>
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="form">
         <label className="questionLabel" htmlFor="question">
           Question:
@@ -54,25 +78,25 @@ export default function App() {
           placeholder="Ask your question here"
         />
 
-        <br></br>
+        <br />
         <label className="fileLabel" htmlFor="file">
-          Upload CSV file:
+          Upload File (.txt, .docx, .pdf, .csv):
         </label>
 
         <input
           type="file"
           id="file"
           name="file"
-          accept=".csv"
+          accept=".txt,.docx,.pdf,.csv"
           onChange={handleFileChange}
           className="fileInput"
         />
-        <br></br>
+        {errorMessage && <p className="error">{errorMessage}</p>}
+        <br />
         <button
-          className="submitBtn"
+          className={`submitBtn ${(file && question.trim()) ? '' : 'dull'}`}
           type="submit"
-          disabled={!file || !question}
-        >
+          disabled={!file && !question.trim()}>
           Submit
         </button>
       </form>
