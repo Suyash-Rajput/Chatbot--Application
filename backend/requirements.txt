@@ -105,3 +105,4 @@ docx2txt==0.8
 python-docx==0.8.11
 langchain-community>=0.0.28
 langchain-core>=0.1.26
+sqlite3>=3.35.0
