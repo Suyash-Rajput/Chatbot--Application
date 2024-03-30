@@ -75,11 +75,11 @@ def get_text(fileType, file):
 
 @app.post("/predict")
 async def predict(request: Request, file: UploadFile = File(...), question: str = Form(...), fileType: str = Form(...)):
-    print("fileType --------", fileType)
-    pages = get_text(fileType, file)
-    print("raw_text --------", pages)
-    resp = result_class.get_result(pages, question)
-    print("Question:", question)
+    # print("fileType --------", fileType)
+    # pages = get_text(fileType, file)
+    # print("raw_text --------", pages)
+    # resp = result_class.get_result(pages, question)
+    # print("Question:", question)
     # return {"result": resp['output_text']}
-    # return {"result" : "suyash is working"}
-    return {"result": [pages, question]}
+    return {"result" : "suyash is working"}
+    # return {"result": [pages, question]}
