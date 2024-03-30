@@ -29,7 +29,6 @@ sympy==1.12
 torch==2.2.1
 SQLAlchemy==2.0.28
 langchain==0.1.12 
-langchain-community==0.0.28 
 PyPDF2==3.0.1
 langchain-core==0.1.32 
 langchain-text-splitters==0.0.1 
