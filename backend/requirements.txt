@@ -105,4 +105,4 @@ faiss-cpu==1.8.0
 pypdf==4.1.0
 docx2txt==0.8
 python-docx==0.8.11
-pip install -U langchain-community
+pip install langchain-community
