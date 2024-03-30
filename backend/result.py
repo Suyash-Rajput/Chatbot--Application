@@ -1,12 +1,14 @@
 from dotenv import load_dotenv
 from langchain import PromptTemplate
+
 import numpy as np
 import pickle,os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import Chroma, FAISS, DocArrayInMemorySearch
+from langchain_community.vectorstores import Chroma, DocArrayInMemorySearch
+# from langchain.vectorstores import Chroma, FAISS, DocArrayInMemorySearch
 from langchain.chains.question_answering import load_qa_chain
-from langchain.callbacks import get_openai_callback
+from langchain_community.callbacks import get_openai_callback
 import google.generativeai as genai
 from langchain_google_genai import ChatGoogleGenerativeAI,GoogleGenerativeAIEmbeddings
 
