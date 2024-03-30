@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
-from langchain import PromptTemplate
-
+from langchain.prompts import PromptTemplate
 import numpy as np
 import pickle,os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
