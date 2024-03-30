@@ -46,7 +46,7 @@ export default function App() {
     formData.append("file", file);
     formData.append("question", question);
     formData.append("fileType", file_type);
-    fetch("http://127.0.0.1:8000/predict", {
+    fetch("https://chatbot-application0.onrender.com", {
       method: "POST",
       body: formData,
     })

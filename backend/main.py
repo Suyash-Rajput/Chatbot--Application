@@ -80,4 +80,5 @@ async def predict(request: Request, file: UploadFile = File(...), question: str 
     print("raw_text --------", pages)
     resp = result_class.get_result(pages, question)
     print("Question:", question)
-    return {"result": resp['output_text']}
+    # return {"result": resp['output_text']}
+    return {"result" : "suyash is working"}
