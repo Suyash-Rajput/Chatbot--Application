@@ -78,6 +78,6 @@ async def predict(request: Request, file: UploadFile = File(...), question: str 
     print("fileType --------", fileType)
     pages = get_text(fileType, file)
     print("raw_text --------", pages)
-    resp = result_class.get_result(page, question)
+    resp = result_class.get_result(pages, question)
     print("Question:", question)
     return {"result": resp['output_text']}
