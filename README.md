@@ -1,4 +1,4 @@
-# ProtonDatalabs AI developer Assignment - Chatbot application
+# Chatbot application
 
 ## Preface
 
