@@ -84,3 +84,6 @@ async def predict(request: Request, file: UploadFile = File(...), question: str 
     # return {"result" : "suyash is working"}
     # return {"result": [pages, question]}    
     
+
+# chroma-hnswlib==0.7.3 
+# chromadb==0.4.24 
